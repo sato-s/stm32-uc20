@@ -66,6 +66,34 @@ static void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN 0 */
 
+#define APP_RX_DATA_SIZE  2048
+
+uint32_t UserTxBufPtrIn = 0;
+uint8_t UserTxBuffer[APP_RX_DATA_SIZE];
+
+
+/**
+  * @brief  Rx Transfer completed callback
+  * @param  huart: UART handle
+  * @retval None
+  */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  /* Increment Index for buffer writing */
+  UserTxBufPtrIn++;
+  
+  /* To avoid buffer overflow */
+  if(UserTxBufPtrIn == APP_RX_DATA_SIZE)
+  {
+    UserTxBufPtrIn = 0;
+  }
+  
+  /* Start another reception: provide the buffer pointer with offset and the buffer size */
+  HAL_UART_Receive_IT(huart, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
+}
+
+
+
 /* USER CODE END 0 */
 
 /**
@@ -108,7 +136,7 @@ int main(void)
   HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, RESET);
   HAL_Delay(200);
   HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, SET);
-  HAL_Delay(500);
+  HAL_Delay(1000);
 
 	// PWR_KEY
 //   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
@@ -161,39 +189,26 @@ int main(void)
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, RESET);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, SET);
     HAL_Delay(200);
-    unsigned char buffer[5];
+    unsigned char buffer[100];
     unsigned char *cmd = "ATI\r\n";
     uint32_t len = strlen(cmd);
+		uint8_t receiveBuffer;
     int status;
+    HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
+
     status = HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ;
     if (status != HAL_OK) {
         //while(1) {}
       printf(status);
     }
 
-    status = HAL_UART_Receive(&huart2, buffer, 1, 5000) ;
+	while(1) {
+	    status = HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ;
+		HAL_Delay(200);
+		printf(UserTxBuffer);
 
-    if (status != HAL_OK) {
-        //while(1) {}
-      printf(status);
-    }
-
-  /* uint8_t receiveBuffer[32]; */
-  /* for (unsigned char i = 0; i < 32; i++) */
-  /* { */
-  /*   receiveBuffer[i] = 2; */
-  /* } */
-  /* while (HAL_UART_GetState(&huart2) != HAL_UART_STATE_READY){} */
-  /*  */
-  /* #<{(| Start receiving the data via USART1 |)}># */
-  /* HAL_UART_Receive_IT(&huart2, receiveBuffer, 3); */
-  /* // Transmit data via USART2 */
-  /* HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ; */
-  /* //HAL_UART_Transmit_IT(&huart2, cmd, len); */
-  /* HAL_Delay(200); */
-  /* printf(receiveBuffer); */
-  /* HAL_Delay(200); */
-  /* HAL_Delay(200); */
+		//HAL_UART_Receive_IT(&huart2, receiveBuffer, 1);
+	}
   while (1) {}
 
   }
