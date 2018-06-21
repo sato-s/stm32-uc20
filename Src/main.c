@@ -111,12 +111,12 @@ int main(void)
   HAL_Delay(500);
 
 	// PWR_KEY
-   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
-   HAL_Delay(200);
-   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, RESET);
-   HAL_Delay(200);
-   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
-   HAL_Delay(2000);
+//   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
+//   HAL_Delay(200);
+//   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, RESET);
+//   HAL_Delay(200);
+//   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
+//   HAL_Delay(2000);
 
 
 	// RESET_N
@@ -328,8 +328,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, STATUS_Pin|M_POWR_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pins : WAKEUP_IN_Pin AP_READY_Pin RESET_MODULE_Pin */
-  GPIO_InitStruct.Pin = WAKEUP_IN_Pin|AP_READY_Pin|RESET_MODULE_Pin;
+  /*Configure GPIO pins : WAKEUP_IN_Pin AP_READY_Pin RESET_MODULE_Pin PWRKEY_MODULE_Pin */
+  GPIO_InitStruct.Pin = WAKEUP_IN_Pin|AP_READY_Pin|RESET_MODULE_Pin|PWRKEY_MODULE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -354,13 +354,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(A5_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PWRKEY_MODULE_Pin */
-  GPIO_InitStruct.Pin = PWRKEY_MODULE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(PWRKEY_MODULE_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : BAT_C_Pin BOOT1_Pin */
   GPIO_InitStruct.Pin = BAT_C_Pin|BOOT1_Pin;
