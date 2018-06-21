@@ -92,7 +92,8 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+ // HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, RESET);
+  HAL_Delay(200);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -101,6 +102,49 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+
+
+  // POWER_PIN
+  HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, RESET);
+  HAL_Delay(200);
+  HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, SET);
+  HAL_Delay(500);
+
+	// PWR_KEY
+   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
+   HAL_Delay(200);
+   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, RESET);
+   HAL_Delay(200);
+   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
+   HAL_Delay(2000);
+
+
+	// RESET_N
+//  HAL_GPIO_WritePin(RESET_MODULE_GPIO_Port, RESET_MODULE_Pin, SET);
+//  HAL_Delay(200);
+//
+//	// STATUS
+//  HAL_GPIO_WritePin(STATUS_GPIO_Port, STATUS_Pin, SET);
+//
+//
+//	// STATUS
+//  HAL_GPIO_WritePin(STATUS_GPIO_Port, STATUS_Pin, RESET);
+//  HAL_Delay(3000);
+
+
+  /* // DTR */
+  /* HAL_GPIO_WritePin(DTR_MODULE_GPIO_Port, DTR_MODULE_Pin, RESET); */
+  /* HAL_Delay(200); */
+  /* HAL_GPIO_WritePin(DTR_MODULE_GPIO_Port, DTR_MODULE_Pin, SET); */
+  /* HAL_Delay(200); */
+  /* // AP_READY_Pin */
+  /* HAL_GPIO_WritePin(AP_READY_GPIO_Port, AP_READY_Pin, RESET); */
+  /* HAL_Delay(200); */
+	/* // WAKEUP_IN_Pin */
+  /* HAL_GPIO_WritePin(WAKEUP_IN_GPIO_Port, WAKEUP_IN_Pin, SET); */
+  /* HAL_Delay(200); */
+  /* HAL_GPIO_WritePin(WAKEUP_IN_GPIO_Port, WAKEUP_IN_Pin, RESET); */
+  //HAL_Delay(200);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -111,12 +155,47 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, SET);
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, RESET);
-	  HAL_Delay(2000);
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, RESET);
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, SET);
-	  HAL_Delay(2000);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, SET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, RESET);
+    HAL_Delay(200);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, RESET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, SET);
+    HAL_Delay(200);
+    unsigned char buffer[5];
+    unsigned char *cmd = "ATI\r\n";
+    uint32_t len = strlen(cmd);
+    int status;
+    status = HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ;
+    if (status != HAL_OK) {
+        //while(1) {}
+      printf(status);
+    }
+
+    status = HAL_UART_Receive(&huart2, buffer, 1, 5000) ;
+
+    if (status != HAL_OK) {
+        //while(1) {}
+      printf(status);
+    }
+
+  /* uint8_t receiveBuffer[32]; */
+  /* for (unsigned char i = 0; i < 32; i++) */
+  /* { */
+  /*   receiveBuffer[i] = 2; */
+  /* } */
+  /* while (HAL_UART_GetState(&huart2) != HAL_UART_STATE_READY){} */
+  /*  */
+  /* #<{(| Start receiving the data via USART1 |)}># */
+  /* HAL_UART_Receive_IT(&huart2, receiveBuffer, 3); */
+  /* // Transmit data via USART2 */
+  /* HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ; */
+  /* //HAL_UART_Transmit_IT(&huart2, cmd, len); */
+  /* HAL_Delay(200); */
+  /* printf(receiveBuffer); */
+  /* HAL_Delay(200); */
+  /* HAL_Delay(200); */
+  while (1) {}
+
   }
   /* USER CODE END 3 */
 
@@ -234,37 +313,54 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, WAKEUP_IN_Pin|AP_READY_Pin|W_DISABLE_Pin|RESET_MODULE_Pin 
-                          |PWRKEY_MODULE_Pin|I2C_POWR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, WAKEUP_IN_Pin|AP_READY_Pin|RESET_MODULE_Pin|PWRKEY_MODULE_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, INT_Pin|DTR_MODULE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, W_DISABLE_Pin|I2C_POWR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DTR_MODULE_GPIO_Port, DTR_MODULE_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_RGB_Pin|GRO_POWR_Pin|ANT_POWR_Pin|RX_LED_Pin 
-                          |TX_LED_Pin|STATUS_Pin|M_POWR_Pin, GPIO_PIN_RESET);
+                          |TX_LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : WAKEUP_IN_Pin AP_READY_Pin W_DISABLE_Pin RESET_MODULE_Pin 
-                           PWRKEY_MODULE_Pin I2C_POWR_Pin */
-  GPIO_InitStruct.Pin = WAKEUP_IN_Pin|AP_READY_Pin|W_DISABLE_Pin|RESET_MODULE_Pin 
-                          |PWRKEY_MODULE_Pin|I2C_POWR_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, STATUS_Pin|M_POWR_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pins : WAKEUP_IN_Pin AP_READY_Pin RESET_MODULE_Pin */
+  GPIO_InitStruct.Pin = WAKEUP_IN_Pin|AP_READY_Pin|RESET_MODULE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : W_DISABLE_Pin I2C_POWR_Pin */
+  GPIO_InitStruct.Pin = W_DISABLE_Pin|I2C_POWR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : INT_Pin DTR_MODULE_Pin */
-  GPIO_InitStruct.Pin = INT_Pin|DTR_MODULE_Pin;
+  /*Configure GPIO pin : DTR_MODULE_Pin */
+  GPIO_InitStruct.Pin = DTR_MODULE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(DTR_MODULE_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : A4_Pin A5_Pin */
-  GPIO_InitStruct.Pin = A4_Pin|A5_Pin;
+  /*Configure GPIO pin : A5_Pin */
+  GPIO_InitStruct.Pin = A5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(A5_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PWRKEY_MODULE_Pin */
+  GPIO_InitStruct.Pin = PWRKEY_MODULE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PWRKEY_MODULE_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : BAT_C_Pin BOOT1_Pin */
   GPIO_InitStruct.Pin = BAT_C_Pin|BOOT1_Pin;
@@ -273,11 +369,18 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LED_RGB_Pin GRO_POWR_Pin ANT_POWR_Pin RX_LED_Pin 
-                           TX_LED_Pin STATUS_Pin M_POWR_Pin */
+                           TX_LED_Pin */
   GPIO_InitStruct.Pin = LED_RGB_Pin|GRO_POWR_Pin|ANT_POWR_Pin|RX_LED_Pin 
-                          |TX_LED_Pin|STATUS_Pin|M_POWR_Pin;
+                          |TX_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : STATUS_Pin M_POWR_Pin */
+  GPIO_InitStruct.Pin = STATUS_Pin|M_POWR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 

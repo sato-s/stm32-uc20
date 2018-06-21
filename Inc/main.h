@@ -57,12 +57,8 @@
 #define W_DISABLE_GPIO_Port GPIOC
 #define RESET_MODULE_Pin GPIO_PIN_3
 #define RESET_MODULE_GPIO_Port GPIOC
-#define INT_Pin GPIO_PIN_0
-#define INT_GPIO_Port GPIOA
 #define DTR_MODULE_Pin GPIO_PIN_1
 #define DTR_MODULE_GPIO_Port GPIOA
-#define A4_Pin GPIO_PIN_4
-#define A4_GPIO_Port GPIOA
 #define A5_Pin GPIO_PIN_5
 #define A5_GPIO_Port GPIOA
 #define PWRKEY_MODULE_Pin GPIO_PIN_4
