@@ -40,8 +40,8 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
+#include "ATCommand.h"
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -136,44 +136,8 @@ int main(void)
   HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, RESET);
   HAL_Delay(200);
   HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, SET);
-  HAL_Delay(2000);
+  HAL_Delay(6000);
 
-	// PWR_KEY
-//   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
-//   HAL_Delay(200);
-//   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, RESET);
-//   HAL_Delay(200);
-//   HAL_GPIO_WritePin(PWRKEY_MODULE_GPIO_Port, PWRKEY_MODULE_Pin, SET);
-//   HAL_Delay(2000);
-
-
-	// RESET_N
-//  HAL_GPIO_WritePin(RESET_MODULE_GPIO_Port, RESET_MODULE_Pin, SET);
-//  HAL_Delay(200);
-//
-//	// STATUS
-//  HAL_GPIO_WritePin(STATUS_GPIO_Port, STATUS_Pin, SET);
-//
-//
-//	// STATUS
-//  HAL_GPIO_WritePin(STATUS_GPIO_Port, STATUS_Pin, RESET);
-//  HAL_Delay(3000);
-
-
-  /* // DTR */
-  /* HAL_GPIO_WritePin(DTR_MODULE_GPIO_Port, DTR_MODULE_Pin, RESET); */
-  /* HAL_Delay(200); */
-  /* HAL_GPIO_WritePin(DTR_MODULE_GPIO_Port, DTR_MODULE_Pin, SET); */
-  /* HAL_Delay(200); */
-  /* // AP_READY_Pin */
-  /* HAL_GPIO_WritePin(AP_READY_GPIO_Port, AP_READY_Pin, RESET); */
-  /* HAL_Delay(200); */
-	/* // WAKEUP_IN_Pin */
-  /* HAL_GPIO_WritePin(WAKEUP_IN_GPIO_Port, WAKEUP_IN_Pin, SET); */
-  /* HAL_Delay(200); */
-  /* HAL_GPIO_WritePin(WAKEUP_IN_GPIO_Port, WAKEUP_IN_Pin, RESET); */
-  //HAL_Delay(200);
-  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -183,33 +147,50 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, SET);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, RESET);
-    HAL_Delay(200);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, RESET);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, SET);
-    HAL_Delay(200);
     unsigned char buffer[100];
     unsigned char *cmd = "ATI\r\n";
     uint32_t len = strlen(cmd);
-		uint8_t receiveBuffer;
     int status;
     HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
     status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd , len);
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
-    HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
     status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd , len);
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
+		// test
+    at_command("AT+QGPS=?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
+    // Query
+    unsigned char *q1 = "AT+QGPS=?\r\n";
+    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)q1 , strlen(q1));
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    // Query2
+    unsigned char *q2 = "AT+QGPSCFG=?\r\n";
+    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)q2 , strlen(q2));
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+
+	// ODP
+    unsigned char *odp = "AT+QGPSCFG=\"odpcontrol\",2\r\n";
+    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)odp , strlen(odp));
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+
+		// GPS setting
     unsigned char *cmd1 = "AT+QGPS=1\r\n";
     uint32_t len1 = strlen(cmd1);
     status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd1 , len1);
+    printf(status);
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
@@ -221,22 +202,39 @@ int main(void)
     HAL_Delay(200);
     HAL_Delay(200);
     printf(UserTxBuffer);
-    status = HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ;
+
+		// GET GPS
+    HAL_Delay(60000);
+    unsigned char *cmd2 = "AT+QGPSLOC?\r\n";
+    uint32_t len2 = strlen(cmd2);
+    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd2 , len2);
     HAL_Delay(200);
-    printf(UserTxBuffer);
-    status = HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ;
     HAL_Delay(200);
-    printf(UserTxBuffer);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
 
-	while(1) {
-	    status = HAL_UART_Transmit(&huart2, (uint8_t *)cmd , len, 5000) ;
-		HAL_Delay(200);
-		printf(UserTxBuffer);
-
-		//HAL_UART_Receive_IT(&huart2, receiveBuffer, 1);
-	}
-  while (1) {}
-
+    while(1) {
+      // GET GPS
+      unsigned char *cmd2 = "AT+QGPSLOC?\r\n";
+      uint32_t len2 = strlen(cmd2);
+      status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd2 , len2);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+      HAL_Delay(200);
+    }
   }
   /* USER CODE END 3 */
 
