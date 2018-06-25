@@ -120,84 +120,38 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-    unsigned char buffer[100];
-    unsigned char *cmd = "ATI\r\n";
-    uint32_t len = strlen(cmd);
     int status;
     HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
-    at_command(huart2, "ATI\r\n");
-    printf(UserTxBuffer);
+    HAL_Delay(200);
+    at_command(&huart2, "AT+QGPS=?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd , len);
+    at_command(&huart2,  "AT+QGPSCFG=?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
-	// test
-    at_command(huart2, "AT+QGPS=?\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    // Query
-    unsigned char *q1 = "AT+QGPS=?\r\n";
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)q1 , strlen(q1));
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    // Query2
-    unsigned char *q2 = "AT+QGPSCFG=?\r\n";
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)q2 , strlen(q2));
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-
-	// ODP
-    unsigned char *odp = "AT+QGPSCFG=\"odpcontrol\",2\r\n";
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)odp , strlen(odp));
-    HAL_Delay(200);
+		// ODP
+    at_command(&huart2, "AT+QGPSCFG=\"odpcontrol\",2\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
 
 		// GPS setting
-    unsigned char *cmd1 = "AT+QGPS=1\r\n";
-    uint32_t len1 = strlen(cmd1);
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd1 , len1);
-    printf(status);
+    at_command(&huart2, "AT+QGPS=1\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    printf(UserTxBuffer);
 
 		// GET GPS
-    HAL_Delay(60000);
-    unsigned char *cmd2 = "AT+QGPSLOC?\r\n";
-    uint32_t len2 = strlen(cmd2);
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd2 , len2);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+    at_command(&huart2, "AT+QGPSLOC?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
 
     while(1) {
       // GET GPS
-      unsigned char *cmd2 = "AT+QGPSLOC?\r\n";
-      uint32_t len2 = strlen(cmd2);
-      status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd2 , len2);
+			at_command(&huart2, "AT+QGPSLOC?\r\n");
       HAL_Delay(200);
       HAL_Delay(200);
       HAL_Delay(200);

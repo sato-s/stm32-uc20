@@ -21,10 +21,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   HAL_UART_Receive_IT(huart, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
 }
 
-
-void at_command(UART_HandleTypeDef *huart, char *command){
+int at_command(UART_HandleTypeDef *huart, unsigned char *command){
     unsigned char *cmd = "ATI\r\n";
     uint32_t len = strlen(cmd);
-    HAL_UART_Transmit_IT(&huart, (uint8_t *)cmd , len);
-	return;
+
+    int status = HAL_UART_Transmit_IT(huart, (uint8_t *)command , strlen(command));
+	return status;
 }
