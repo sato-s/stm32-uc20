@@ -22,8 +22,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 
-void at_command(UART_HandleTypeDef huart, char *command){
-	int status = HAL_UART_Transmit_IT(&huart, (uint8_t *)command, strlen(command));
-	//printf(status);
+void at_command(UART_HandleTypeDef *huart, char *command){
+    unsigned char *cmd = "ATI\r\n";
+    uint32_t len = strlen(cmd);
+    HAL_UART_Transmit_IT(&huart, (uint8_t *)cmd , len);
 	return;
 }

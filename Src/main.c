@@ -40,8 +40,8 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
-#include "ATCommand.h"
 /* USER CODE BEGIN Includes */
+#include "ATCommand.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -106,14 +106,12 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-
-
-  // POWER_PIN
   HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, RESET);
   HAL_Delay(200);
   HAL_GPIO_WritePin(M_POWR_GPIO_Port, M_POWR_Pin, SET);
   HAL_Delay(6000);
 
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -127,7 +125,8 @@ int main(void)
     uint32_t len = strlen(cmd);
     int status;
     HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
-    at_command(huart2, "AT+QGPS=?\r\n");
+    at_command(huart2, "ATI\r\n");
+    printf(UserTxBuffer);
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);

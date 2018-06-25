@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/sato_sawahiko/Desktop/CommonSensor/Inc
+HeaderPath=C:/tools/cygwin/home/sato_sawahiko/workspace/stm32-uc20/Inc
 HeaderFiles=stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;
-SourcePath=C:/Users/sato_sawahiko/Desktop/CommonSensor/Src
+SourcePath=C:/tools/cygwin/home/sato_sawahiko/workspace/stm32-uc20/Src
 SourceFiles=stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
