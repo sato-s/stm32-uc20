@@ -66,33 +66,9 @@ static void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN 0 */
 
-#define APP_RX_DATA_SIZE  2048
 
 uint32_t UserTxBufPtrIn = 0;
 uint8_t UserTxBuffer[APP_RX_DATA_SIZE];
-
-
-/**
-  * @brief  Rx Transfer completed callback
-  * @param  huart: UART handle
-  * @retval None
-  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  /* Increment Index for buffer writing */
-  UserTxBufPtrIn++;
-  
-  /* To avoid buffer overflow */
-  if(UserTxBufPtrIn == APP_RX_DATA_SIZE)
-  {
-    UserTxBufPtrIn = 0;
-  }
-  
-  /* Start another reception: provide the buffer pointer with offset and the buffer size */
-  HAL_UART_Receive_IT(huart, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
-}
-
-
 
 /* USER CODE END 0 */
 
@@ -141,8 +117,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+
 
   /* USER CODE END WHILE */
 
@@ -152,7 +127,7 @@ int main(void)
     uint32_t len = strlen(cmd);
     int status;
     HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
-    status = HAL_UART_Transmit_IT(&huart2, (uint8_t *)cmd , len);
+    at_command(huart2, "AT+QGPS=?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
@@ -160,8 +135,8 @@ int main(void)
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
-		// test
-    at_command("AT+QGPS=?\r\n");
+	// test
+    at_command(huart2, "AT+QGPS=?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
@@ -235,7 +210,7 @@ int main(void)
       HAL_Delay(200);
       HAL_Delay(200);
     }
-  }
+
   /* USER CODE END 3 */
 
 }

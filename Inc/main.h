@@ -45,6 +45,10 @@
 
 /* USER CODE BEGIN Includes */
 
+#include <stdint.h>
+#define APP_RX_DATA_SIZE  2048
+extern uint32_t UserTxBufPtrIn;
+extern uint8_t UserTxBuffer[APP_RX_DATA_SIZE];
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
