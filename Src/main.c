@@ -123,14 +123,12 @@ int main(void)
     int status;
     HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
     HAL_Delay(200);
-    at_command(&huart2, "AT+QGPS=?\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+
     at_command(&huart2,  "AT+QGPSCFG=?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
+
 		// ODP
     at_command(&huart2, "AT+QGPSCFG=\"odpcontrol\",2\r\n");
     HAL_Delay(200);
@@ -138,7 +136,13 @@ int main(void)
     HAL_Delay(200);
 
 		// GPS setting
-    at_command(&huart2, "AT+QGPS=1\r\n");
+    at_command(&huart2, "AT+QGPS=1,1,5,1000,1\r\n");
+    HAL_Delay(200);
+    HAL_Delay(200);
+    HAL_Delay(200);
+
+    // Check
+    at_command(&huart2, "AT+QGPS?\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
