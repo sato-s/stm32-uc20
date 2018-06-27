@@ -136,7 +136,7 @@ int main(void)
     HAL_Delay(200);
 
     // DPO
-    at_command(&huart2, "AT+QGPSCFG=\"dpoenable\",0\r\n");
+    at_command(&huart2, "AT+QGPSCFG=\"dpoenable\",1\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
@@ -144,8 +144,8 @@ int main(void)
 
 		// GPS setting
     //AT+QGPS=<gnssmode>[,<fixmaxtime>[,<fixmaxdist>[,<fixcount>[,<fixrate>]]]]
-
-    at_command(&huart2, "AT+QGPS=1,100,1000,0,1\r\n");
+    //at_command(&huart2, "AT+QGPS=1,100,1000,0,1\r\n");
+    at_command(&huart2, "AT+QGPS=1\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
@@ -155,18 +155,20 @@ int main(void)
     HAL_Delay(200);
     HAL_Delay(200);
     HAL_Delay(200);
+    HAL_Delay(600000);
 
 		// GET GPS
     at_command(&huart2, "AT+QGPSLOC=1\r\n");
     HAL_Delay(200);
     HAL_Delay(200);
-    HAL_Delay(9000);
+    HAL_Delay(200);
+    HAL_Delay(200);
 
     while(1) {
       // GET GPS
     	at_command(&huart2, "AT+QGPSLOC=1\r\n");
       HAL_Delay(200);
-      HAL_Delay(2000);
+      HAL_Delay(50000);
       HAL_Delay(200);
       HAL_Delay(200);
       HAL_Delay(200);
