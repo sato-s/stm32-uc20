@@ -120,53 +120,67 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-    int status;
-    HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
-    HAL_Delay(200);
+  int status;
+  HAL_UART_Receive_IT(&huart2, (uint8_t *)(UserTxBuffer + UserTxBufPtrIn), 1);
+  HAL_Delay(200);
 
-    at_command(&huart2,  "AT+QGPSCFG=?\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+  at_command(&huart2,  "AT+QGPSCFG=?\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
 
-		// ODP
-    at_command(&huart2, "AT+QGPSCFG=\"odpcontrol\",0\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+  // ODP
+  at_command(&huart2, "AT+QGPSCFG=\"autogps\"\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
 
-    // DPO
-    at_command(&huart2, "AT+QGPSCFG=\"dpoenable\",1\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+  // ODP
+  at_command(&huart2, "AT+QGPSCFG=\"odpcontrol\"\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
+
+	// DPO
+  at_command(&huart2, "AT+QGPSCFG=\"dpoenable\",0\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
+
+  // Enable NMEA format
+  at_command(&huart2, "AT+QGPSCFG=\"nmeasrc\"\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
 
 
-		// GPS setting
-    //AT+QGPS=<gnssmode>[,<fixmaxtime>[,<fixmaxdist>[,<fixcount>[,<fixrate>]]]]
-    //at_command(&huart2, "AT+QGPS=1,100,1000,0,1\r\n");
-    at_command(&huart2, "AT+QGPS=1\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+  // GPS setting
+  //AT+QGPS=<gnssmode>[,<fixmaxtime>[,<fixmaxdist>[,<fixcount>[,<fixrate>]]]]
+  at_command(&huart2, "AT+QGPS=1,100,1000,0,1\r\n");
+  //at_command(&huart2, "AT+QGPS=1\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
 
-    // Check
-    at_command(&huart2, "AT+QGPS?\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(600000);
+  // Check
+  at_command(&huart2, "AT+QGPS?\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(80000);
 
-		// GET GPS
-    at_command(&huart2, "AT+QGPSLOC=1\r\n");
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
-    HAL_Delay(200);
+  // GET GPS
+  /* at_command(&huart2, "AT+QGPSLOC=1\r\n"); */
+  at_command(&huart2, "AT+QGPSGNMEA=\"GGA\"\r\n");
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
+  HAL_Delay(200);
 
     while(1) {
       // GET GPS
-    	at_command(&huart2, "AT+QGPSLOC=1\r\n");
+      /* at_command(&huart2, "AT+QGPSLOC=1\r\n"); */
+      at_command(&huart2, "AT+QGPSGNMEA=\"GGA\"\r\n");
       HAL_Delay(200);
       HAL_Delay(50000);
       HAL_Delay(200);
