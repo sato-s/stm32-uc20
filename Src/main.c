@@ -157,7 +157,7 @@ int main(void)
   // GPS setting
   //AT+QGPS=<gnssmode>[,<fixmaxtime>[,<fixmaxdist>[,<fixcount>[,<fixrate>]]]]
   //at_command(&huart2, "AT+QGPS=1,100,1000,0,1\r\n");
-  //at_command(&huart2, "AT+QGPS=1\r\n");
+  at_command(&huart2, "AT+QGPS=1\r\n");
   HAL_Delay(200);
   HAL_Delay(200);
   HAL_Delay(200);
@@ -315,9 +315,6 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, W_DISABLE_Pin|I2C_POWR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DTR_MODULE_GPIO_Port, DTR_MODULE_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_RGB_Pin|GRO_POWR_Pin|ANT_POWR_Pin|RX_LED_Pin 
                           |TX_LED_Pin, GPIO_PIN_RESET);
 
@@ -337,13 +334,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : DTR_MODULE_Pin */
-  GPIO_InitStruct.Pin = DTR_MODULE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DTR_MODULE_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : A5_Pin */
   GPIO_InitStruct.Pin = A5_Pin;

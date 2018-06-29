@@ -62,8 +62,6 @@ extern uint8_t UserTxBuffer[APP_RX_DATA_SIZE];
 #define W_DISABLE_GPIO_Port GPIOC
 #define RESET_MODULE_Pin GPIO_PIN_3
 #define RESET_MODULE_GPIO_Port GPIOC
-#define DTR_MODULE_Pin GPIO_PIN_1
-#define DTR_MODULE_GPIO_Port GPIOA
 #define A5_Pin GPIO_PIN_5
 #define A5_GPIO_Port GPIOA
 #define PWRKEY_MODULE_Pin GPIO_PIN_4
